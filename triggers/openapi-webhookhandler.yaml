@@ -1,0 +1,12 @@
+triggers:
+  openapi-webhookhandler-1:
+    name: post-amplifycentralwebhookhandler
+    parameters:
+      method: post-amplifycentralwebhookhandler
+    enabled: true
+    invoke:
+      flow: post-amplifycentralwebhookhandler
+      parameters:
+        request: $.request
+        config: $.config
+        env: $.env

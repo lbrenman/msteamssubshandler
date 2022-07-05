@@ -1,0 +1,708 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "webhookhandler",
+    "version": "1.0",
+    "description": "Amplify Central Webhook Handler API",
+    "contact": {
+      "name": "Leor Brenman",
+      "email": "lbrenman99@hotmail.com"
+    }
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/amplifycentralwebhookhandler": {
+      "post": {
+        "summary": "",
+        "operationId": "post-amplifycentralwebhookhandler",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Webhook Handler"
+        ],
+        "description": "Amplify Central Webhook Handler API",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionWebhookPayload"
+            }
+          }
+        ],
+        "x-flow": "webhookhandler-post-amplifycentralwebhookhandler"
+      }
+    }
+  },
+  "definitions": {
+    "SubscriptionWebhookPayload": {
+      "description": "Amplify Central Webhook Payload",
+      "type": "object",
+      "x-examples": {
+        "example-1": {
+          "metadata": {},
+          "product": "AmplifyCentral",
+          "type": "SubscriptionUpdatedEvent",
+          "version": "v1",
+          "payload": {
+            "consumerInstance": {
+              "metadata": {
+                "references": [
+                  {
+                    "id": "8a2e904c7ccdb5ac017cdc003cf66fc8",
+                    "kind": "APIServiceRevision",
+                    "name": "dbf98209-3b23-11ec-b7cb-0242ac110003.1",
+                    "scopeKind": "Environment",
+                    "scopeName": "v7b",
+                    "selfLink": "/management/v1alpha1/environments/v7b/apiservicerevisions/dbf98209-3b23-11ec-b7cb-0242ac110003.1",
+                    "type": "soft"
+                  },
+                  {
+                    "id": "8a2e814d7ccdb5a1017cdc003b876c88",
+                    "kind": "APIService",
+                    "name": "dbf98209-3b23-11ec-b7cb-0242ac110003",
+                    "scopeKind": "Environment",
+                    "scopeName": "v7b",
+                    "selfLink": "/management/v1alpha1/environments/v7b/apiservices/dbf98209-3b23-11ec-b7cb-0242ac110003",
+                    "type": "soft"
+                  },
+                  {
+                    "id": "8a2e904c7ccdb5ac017cdba25c5c6bfc",
+                    "kind": "ConsumerSubscriptionDefinition",
+                    "name": "32a0d913-cb08-46d7-9e19-713b87e8cf12",
+                    "scopeKind": "Environment",
+                    "scopeName": "v7b",
+                    "selfLink": "/management/v1alpha1/environments/v7b/consumersubscriptiondefs/32a0d913-cb08-46d7-9e19-713b87e8cf12",
+                    "type": "soft"
+                  },
+                  {
+                    "id": "8a2e814d7ccdb5a1017cdc003e876c92",
+                    "kind": "APIServiceInstance",
+                    "name": "dbf98209-3b23-11ec-b7cb-0242ac110003.1",
+                    "scopeKind": "Environment",
+                    "scopeName": "v7b",
+                    "selfLink": "/management/v1alpha1/environments/v7b/apiserviceinstances/dbf98209-3b23-11ec-b7cb-0242ac110003.1",
+                    "type": "hard"
+                  }
+                ],
+                "audit": {
+                  "modifyUserId": "DOSA_8ef309d638c64276bff7f02bac87a437",
+                  "createUserId": "DOSA_8ef309d638c64276bff7f02bac87a437",
+                  "createTimestamp": "2021-11-01T14:56:16.334+0000",
+                  "modifyTimestamp": "2021-11-01T14:56:16.334+0000"
+                },
+                "resourceVersion": "0",
+                "scope": {
+                  "name": "v7b",
+                  "id": "8a2e8839781407c10178143caeec0031",
+                  "kind": "Environment",
+                  "selfLink": "/management/v1alpha1/environments/v7b"
+                },
+                "id": "8a2e814d7ccdb5a1017cdc003fce6c9d",
+                "selfLink": "/management/v1alpha1/environments/v7b/consumerinstances/dbf98209-3b23-11ec-b7cb-0242ac110003"
+              },
+              "apiVersion": "v1alpha1",
+              "kind": "ConsumerInstance",
+              "name": "dbf98209-3b23-11ec-b7cb-0242ac110003",
+              "attributes": {
+                "apicId": "8a2e963276ab51b40176b545e8ca0028",
+                "createdBy": "EnterpriseEdgeGatewayDiscoveryAgent",
+                "externalAPIID": "32a0d913-cb08-46d7-9e19-713b87e8cf12",
+                "externalAPIName": "weather",
+                "GatewayType": "Edge",
+                "majorHash": "18235070765696718801",
+                "externalAPIPrimaryKey": "vhost:-path:/v2.0-routingKey:",
+                "minorHash": "8472393168656605118"
+              },
+              "group": "management",
+              "tags": [
+                "APIID_c82126be-9915-4c29-9bfd-a6644e8fb510"
+              ]
+            },
+            "subscription": {
+              "metadata": {
+                "createUserId": "f2c669af-d7a3-46fb-b327-8c60249bc4c9"
+              },
+              "nextPossibleStates": [
+                "APPROVED",
+                "REJECTED"
+              ],
+              "relationships": [
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003b876c88"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_REVISION_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003.1"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_INSTANCE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003e876c92"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_REVISION_ID",
+                  "value": "8a2e904c7ccdb5ac017cdc003cf66fc8"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_INSTANCE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003.1"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_CONSUMER_INSTANCE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003"
+                },
+                {
+                  "key": "additionalDataAccessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "UNSTRUCTURED_DATA_CONTENT_TYPE",
+                  "value": ""
+                },
+                {
+                  "key": "additionalDataAccessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "UNSTRUCTURED_DATA_TYPE",
+                  "value": ""
+                },
+                {
+                  "key": "accessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "TARGET_ENDPOINT_URL",
+                  "value": "https://208.67.129.36:8065/v2.0"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_ENVIRONMENT_ID",
+                  "value": "8a2e8839781407c10178143caeec0031"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_CONSUMER_INSTANCE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003fce6c9d"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_ENVIRONMENT_NAME",
+                  "value": "v7b"
+                }
+              ],
+              "currentStateDescription": "",
+              "name": "Web App",
+              "owningTeamId": "e4ec6c1a69fd0b8e016a22c82fc9170c",
+              "id": "8a2e8be87d32d7bb017d34c876cb185c",
+              "currentState": "REQUESTED",
+              "properties": {
+                "profile": {
+                  "appName": "Mission2020 (API Development)"
+                }
+              }
+            },
+            "catalogItem": {
+              "name": "weather (v7b)",
+              "owningTeamId": "e4ec6c1a69fd0b8e016a22c82fc9170c",
+              "relationships": [
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_INSTANCE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003.1"
+                },
+                {
+                  "key": "additionalDataAccessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "UNSTRUCTURED_DATA_TYPE",
+                  "value": ""
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_ENVIRONMENT_NAME",
+                  "value": "v7b"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_INSTANCE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003e876c92"
+                },
+                {
+                  "key": "accessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "TARGET_ENDPOINT_URL",
+                  "value": "https://208.67.129.36:8065/v2.0"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_CONSUMER_INSTANCE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_REVISION_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003.1"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_ENVIRONMENT_ID",
+                  "value": "8a2e8839781407c10178143caeec0031"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_REVISION_ID",
+                  "value": "8a2e904c7ccdb5ac017cdc003cf66fc8"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_NAME",
+                  "value": "dbf98209-3b23-11ec-b7cb-0242ac110003"
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_CONSUMER_INSTANCE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003fce6c9d"
+                },
+                {
+                  "key": "additionalDataAccessInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "UNSTRUCTURED_DATA_CONTENT_TYPE",
+                  "value": ""
+                },
+                {
+                  "key": "apiServerInfo",
+                  "path": "",
+                  "spec": "catalogItem",
+                  "type": "API_SERVER_SERVICE_ID",
+                  "value": "8a2e814d7ccdb5a1017cdc003b876c88"
+                }
+              ],
+              "id": "8a2e80017cc72844017cdc004246447c"
+            }
+          },
+          "organization": {
+            "id": "100000142"
+          },
+          "correlationId": "7bf265de-b830-4579-82a1-f813e57de7a3",
+          "id": "13edb839-f92f-4b5b-8711-ed984cf1a90b",
+          "time": "2021-11-18T20:41:33.351+0000"
+        }
+      },
+      "properties": {
+        "metadata": {
+          "type": "object"
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "consumerInstance": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "references": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "scopeKind": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "scopeName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "selfLink": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "type": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    },
+                    "audit": {
+                      "type": "object",
+                      "properties": {
+                        "modifyUserId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "createUserId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "createTimestamp": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "modifyTimestamp": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "resourceVersion": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "scope": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "selfLink": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "selfLink": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "apiVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "apicId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "externalAPIID": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "externalAPIName": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "GatewayType": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "majorHash": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "externalAPIPrimaryKey": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minorHash": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "group": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "subscription": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "createUserId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "nextPossibleStates": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "relationships": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "spec": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "type": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 0
+                      }
+                    }
+                  }
+                },
+                "currentStateDescription": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "owningTeamId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "currentState": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "profile": {
+                      "type": "object",
+                      "properties": {
+                        "appName": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "catalogItem": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "owningTeamId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "relationships": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "spec": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "type": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 0
+                      }
+                    }
+                  }
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "organization": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "correlationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "metadata",
+        "product",
+        "type",
+        "version",
+        "payload"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "API Key - 1": {
+      "name": "APIKey",
+      "type": "apiKey",
+      "in": "header",
+      "description": "API Key"
+    }
+  },
+  "tags": [
+    {
+      "name": "Webhook Handler"
+    }
+  ]
+}

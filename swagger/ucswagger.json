@@ -1,0 +1,4105 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Amplify Unified Catalog APIs",
+    "description" : "**APIs for Amplify Unified Catalog**\nAmplify Unified Catalog supports different structure for its properties at the Catalog Item, Revision and Subscription Definition level depending on the Catalog Item definitionType, definitionSubType and definitionRevision.\n\nUse the *definition* APIs available at https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes to discover all supported types, subtypes and revisions.\n\nThe dynamic endpoints of the API per definition type, sub type and revision are the following:\nhttps://apicentral.axway.com/api/unifiedCatalog/v1/catalogItems/{id}/properties/{propertyKey}\nhttps://apicentral.axway.com/api/unifiedCatalog/v1/catalogItems/{id}/revisions/properties/{propertyKey}\nhttps://apicentral.axway.com/api/unifiedCatalog/v1/catalogItems/{id}/subscriptionDefinition/properties/{propertyKey}\n\nEach type/subtype/revision generated Open API Specification V2 can be accessed at a specific url:\ndefinitionType | definitionSubType | revision | docs url\n-------------- | ----------------- | -------- | --------\nAPI | swaggerv2 | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/docs)\nAPI | oas3 | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/docs)\nAPI | asyncapi | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/docs)\nAPI | wsdl | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/docs)\nAPI | protobuf | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/docs)\nAPI | graphql | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/docs)\nAPI | unstructured | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/docs)\nMFT | servicedefinition | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/MFT/subtypes/servicedefinition/revisions/1/docs)\nCUSTOM | unstructured | 1 | [OAS2](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/docs)\n\n\nThe structure of the resource for the property keys is defined on the server side at the Catalog Item level and Catalog Item Revision level.\nThe structure of the Subscription Definition resource is controlled by the Provider of the Catalog Item instance.\nSince each Catalog Item Subscription Definition is specific per Catalog Item, to access its structure, the following endpoint can be used:\nhttps://apicentral.axway.com/api/unifiedCatalog/v1/catalogItems/{catalogItemId}/subscriptionDefinition/properties/{propertyKey}\nEach catalog item supports generating its own OAS2 which includes the definition of the subscription as specified by the provider, by accessing this endpoint:\nhttps://apicentral.axway.com/api/unifiedCatalog/v1/catalogItems/{catalogItemId}/docs",
+    "contact" : {
+      "email" : "support@axway.com"
+    },
+    "license" : {
+      "name" : "Copyright Axway 2022. All rights reserved."
+    },
+    "version" : "1.86.0"
+  },
+  "basePath" : "/api/unifiedCatalog/v1",
+  "schemes" : [ "https" ],
+  "securityDefinitions" : {
+    "Bearer" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    },
+    "OAuth2ClientCredentials" : {
+      "type" : "oauth2",
+      "flow" : "application",
+      "tokenUrl" : "https://login.axway.com/auth/realms/Broker/protocol/openid-connect/token",
+      "scopes" : { }
+    },
+    "OAuth2AccessCode" : {
+      "type" : "oauth2",
+      "flow" : "accessCode",
+      "tokenUrl" : "https://login.axway.com/auth/realms/Broker/protocol/openid-connect/token",
+      "authorizationUrl" : "https://login.axway.com/auth/realms/Broker/protocol/openid-connect/auth",
+      "scopes" : { }
+    },
+    "OAuth2Implicit" : {
+      "type" : "oauth2",
+      "flow" : "implicit",
+      "authorizationUrl" : "https://login.axway.com/auth/realms/Broker/protocol/openid-connect/auth",
+      "scopes" : { }
+    }
+  },
+  "security" : [ {
+    "Bearer" : [ ]
+  }, {
+    "OAuth2ClientCredentials" : [ ]
+  }, {
+    "OAuth2AccessCode" : [ ]
+  }, {
+    "OAuth2Implicit" : [ ]
+  } ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "parameters" : {
+    "TeamHeader" : {
+      "name" : "X-Axway-Team-Id",
+      "type" : "string",
+      "in" : "header",
+      "maxLength" : 32,
+      "required" : false,
+      "description" : "The currently selected team if the user is using the system within a team context"
+    },
+    "TenantHeader" : {
+      "name" : "X-Axway-Tenant-Id",
+      "type" : "string",
+      "in" : "header",
+      "maxLength" : 32,
+      "required" : false,
+      "description" : "The tenant identifier. Not required when using Service Accounts."
+    },
+    "PageNumberParam" : {
+      "name" : "page",
+      "in" : "query",
+      "type" : "integer",
+      "default" : 1,
+      "required" : false,
+      "description" : "The offset starting page number in the result set to start returning results from, starts at 1"
+    },
+    "PageSizeParam" : {
+      "name" : "pageSize",
+      "in" : "query",
+      "type" : "integer",
+      "default" : 20,
+      "required" : false,
+      "description" : "The number of entities allowed in a page"
+    }
+  },
+  "paths" : {
+    "/ping" : {
+      "get" : {
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string",
+              "example" : "pong"
+            }
+          }
+        },
+        "security" : [ ]
+      }
+    },
+    "/categories" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of categories."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Category"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "List category items",
+        "operationId" : "GET_categories",
+        "description" : "List of categories.",
+        "parameters" : [ {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        }, {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        }, {
+          "in" : "query",
+          "name" : "query",
+          "type" : "string",
+          "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n  id\n  name\n  metadata.createTimestamp\n  audit.createTimestamp (same as metadata.createTimestamp)\n  metadata.modifyTimestamp\n  audit.modifyTimestamp (same as metadata.modifyTimestamp)\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+          "required" : false
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n        name\n        metadata.createTimestamp\n        audit.createTimestamp (same as metadata.createTimestamp)\n        createTime (same as metadata.createTimestamp)\n        metadata.modifyTimestamp\n        audit.modifyTimestamp (same as metadata.modifyTimestamp)\n        modifyTime (same as metadata.createTimestamp)",
+          "required" : false
+        } ],
+        "tags" : [ "categories" ],
+        "produces" : [ "application/json" ]
+      },
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "Create a category for grouping the catalog items",
+            "schema" : {
+              "$ref" : "#/definitions/Category"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Create a category",
+        "operationId" : "POST_category",
+        "description" : "Create a unique category for grouping the catalog items.",
+        "tags" : [ "categories" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Category"
+          }
+        }, {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        } ],
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ]
+      }
+    },
+    "/categories/{categoryId}" : {
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Category"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a category item",
+        "operationId" : "PUT_Category",
+        "description" : "Update a category of catalog items.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Category"
+          }
+        } ],
+        "tags" : [ "categories" ]
+      },
+      "parameters" : [ {
+        "name" : "categoryId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/Category"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "operationId" : "GET_Category",
+        "summary" : "Get Category",
+        "description" : "View a category item.",
+        "tags" : [ "categories" ],
+        "produces" : [ "application/json" ]
+      },
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : ""
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Delete a category",
+        "operationId" : "DELETE_Category",
+        "description" : "Delete a category of catalog items.",
+        "tags" : [ "categories" ]
+      }
+    },
+    "/catalogItems" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of catalog items."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogItem"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "List catalog items",
+        "operationId" : "GET_catalogItems",
+        "parameters" : [ {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        }, {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        }, {
+          "in" : "query",
+          "name" : "query",
+          "type" : "string",
+          "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n  id\n  definitionType\n  definitionSubType\n  definitionRevision\n  name\n  description\n  relationships.type\n  relationships.value\n  metadata.createTimestamp\n  audit.createTimestamp (same as metadata.createTimestamp)\n  metadata.modifyTimestamp\n  audit.modifyTimestamp (same as metadata.modifyTimestamp)\n  visibility\n\ttags\n  state\n\tcategories\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+          "required" : false
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n        name\n        metadata.createTimestamp\n        audit.createTimestamp (same as metadata.createTimestamp)\n        createTime (same as metadata.createTimestamp)\n        metadata.modifyTimestamp\n        audit.modifyTimestamp (same as metadata.modifyTimestamp)\n        modifyTime (same as metadata.createTimestamp)",
+          "required" : false
+        }, {
+          "in" : "query",
+          "name" : "expand",
+          "type" : "string",
+          "description" : "Available values are image, latestVersionDetails, acl and categories.\nMultiple values can be specified using a \",\" character.\nExample: expand=image,latestVersionDetails"
+        } ],
+        "description" : "List catalog items",
+        "tags" : [ "catalog-items" ],
+        "produces" : [ "application/json" ]
+      },
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItem"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Create a catalog item",
+        "operationId" : "POST_catalogItem",
+        "description" : "Create a catalog item",
+        "tags" : [ "catalog-items" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemInit"
+          }
+        }, {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        } ],
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/revisions" : {
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      } ],
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemRevision"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "operationId" : "POST_catalogItem_revision",
+        "description" : "Create new access control item for the revision",
+        "summary" : "Create new catalog item revision",
+        "tags" : [ "catalog-items" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemRevision"
+          }
+        } ],
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ]
+      },
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of catalog item revisions."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogItemRevision"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get a list of the catalog item revisions",
+        "operationId" : "GET_catalogItemRevisions",
+        "description" : "Get a list of the catalog item revisions",
+        "tags" : [ "catalog-items" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        }, {
+          "in" : "query",
+          "name" : "query",
+          "type" : "string",
+          "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n state\n version\n number\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+          "required" : false
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n      revision",
+          "required" : false
+        } ]
+      }
+    },
+    "/subscriptions" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of subscriptions."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogItemSubscription"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get my subscriptions",
+        "operationId" : "GET_subscriptions",
+        "tags" : [ "subscriptions" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        }, {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        }, {
+          "in" : "query",
+          "name" : "query",
+          "type" : "string",
+          "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n        name\n        state\n        owningTeamId\n        deletable\n        metadata.createTimestamp\n        audit.createTimestamp (same as metadata.createTimestamp)\n        metadata.modifyTimestamp\n        audit.modifyTimestamp (same as metadata.modifyTimestamp)\n        catalogItemId\n        relationships.type\n        relationships.value\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+          "required" : false
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n    name\n    state\n    metadata.createTimestamp\n    audit.createTimestamp (same as metadata.createTimestamp)\n    createTime (same as metadata.createTimestamp)\n    metadata.modifyTimestamp\n    audit.modifyTimestamp (same as metadata.modifyTimestamp)\n    modifyTime (same as metadata.createTimestamp)",
+          "required" : false
+        } ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptions" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of subscriptions for the catalog item."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogItemSubscription"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Lists the catalog item subscriptions ",
+        "description" : "Lists the catalog item subscriptions ",
+        "operationId" : "GET_catalogItemSubscriptions",
+        "tags" : [ "subscriptions" ]
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/PageSizeParam"
+      }, {
+        "$ref" : "#/parameters/PageNumberParam"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "in" : "query",
+        "name" : "query",
+        "type" : "string",
+        "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n state\n deletable\n relationships.type\n relationships.value\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+        "required" : false
+      }, {
+        "name" : "sort",
+        "in" : "query",
+        "type" : "array",
+        "items" : {
+          "type" : "string"
+        },
+        "collectionFormat" : "multi",
+        "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n      state",
+        "required" : false
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      } ],
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "subscription" : {
+                  "$ref" : "#/definitions/CatalogItemSubscription"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Subscribe to a specific version of Catalog Item",
+        "operationId" : "subscribe-catalog-item",
+        "description" : "Subscribe to a catalog item. ",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemSubscription"
+          }
+        }, {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        } ],
+        "tags" : [ "subscriptions" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/image" : {
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemImage"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get Catalog Item Image",
+        "description" : "Get Catalog Item Image",
+        "operationId" : "GET_catalogItemImage",
+        "produces" : [ "application/json" ],
+        "tags" : [ "catalog-items" ]
+      },
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "Image successfully set"
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Set catalogItem Image",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemImage"
+          }
+        } ],
+        "operationId" : "POST_catalogItemImage",
+        "tags" : [ "catalog-items" ],
+        "consumes" : [ "application/json" ]
+      },
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : "Image successfully deleted"
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Delete catalogItem Image",
+        "operationId" : "DELETE_catalogItemImage",
+        "tags" : [ "catalog-items" ],
+        "consumes" : [ "application/json" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}" : {
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItem"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a catalog item",
+        "operationId" : "PUT_CatalogItem",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "Update a catalog item",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItem"
+          }
+        } ],
+        "tags" : [ "catalog-items" ]
+      },
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItem"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "operationId" : "GET_CatalogItem",
+        "summary" : "Get Catalog item",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "embed",
+          "type" : "string",
+          "enum" : [ "revisions", "lastRevisionDetails", "subscription", "categories", "image", "properties" ],
+          "description" : "Specified additional information to be embedded into the Catalog Item properties"
+        } ],
+        "tags" : [ "catalog-items" ],
+        "produces" : [ "application/json" ]
+      },
+      "delete" : {
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "force",
+          "type" : "boolean",
+          "description" : "Force deleting"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : ""
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Delete a catalog item",
+        "operationId" : "DELETE_CatalogItem",
+        "tags" : [ "catalog-items" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}" : {
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Removes a catalog item revision",
+        "description" : "Removes a catalog item revision",
+        "operationId" : "DELETE_catalogItemRevision",
+        "tags" : [ "catalog-items" ]
+      },
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemRevision"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "embed",
+          "type" : "string",
+          "enum" : [ "properties.value" ],
+          "description" : "Specified additional information to be embeeded into the Catalog Item properties"
+        } ],
+        "summary" : "Get a catalog item revision",
+        "tags" : [ "catalog-items" ]
+      },
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemRevision"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a catalog item revision",
+        "tags" : [ "catalog-items" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemRevision"
+          }
+        } ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptions/{subscriptionId}/states" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogItemSubscriptionState"
+              }
+            }
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "List the transitions states for an subscription to the catalog item",
+        "description" : "List the transitions states for an subscription to the catalog item",
+        "operationId" : "GET_catalogItemSubscriptionStates",
+        "tags" : [ "subscriptions" ]
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "subscriptionId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      } ],
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemSubscriptionState"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Creates a new state for the catalog item version subscriptions",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemSubscriptionState"
+          }
+        } ],
+        "operationId" : "POST_catalogItemSubscriptions",
+        "description" : "Creates a new state for the catalog item version subscriptions",
+        "tags" : [ "subscriptions" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/acl" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of access control list for the catalog item."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AccessControlItem"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "tags" : [ "catalog-access-control" ],
+        "operationId" : "GET_acessControlList",
+        "summary" : "Retrieve all Access control items for the Catalog Item",
+        "parameters" : [ {
+          "name" : "catalogItemId",
+          "in" : "path",
+          "type" : "string",
+          "required" : true
+        }, {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        }, {
+          "$ref" : "#/parameters/TeamHeader"
+        }, {
+          "in" : "query",
+          "name" : "query",
+          "type" : "string",
+          "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for sorting:\n        entityType\nDocumentation link: https://github.com/jirutka/rsql-parser",
+          "required" : false
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n        type\n        entityId",
+          "required" : false
+        } ]
+      },
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/AccessControlItem"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Creates an access control item for the catalog item.",
+        "tags" : [ "catalog-access-control" ],
+        "operationId" : "POST_accessControlItem",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/AccessControlItem"
+          }
+        }, {
+          "name" : "catalogItemId",
+          "in" : "path",
+          "type" : "string",
+          "required" : true
+        }, {
+          "$ref" : "#/parameters/TenantHeader"
+        }, {
+          "$ref" : "#/parameters/TeamHeader"
+        } ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/acl/{aclId}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/AccessControlItem"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieves the catalog item access control list",
+        "description" : "Retrieves an access control list entry",
+        "operationId" : "GET_catalogItemACLEntry",
+        "tags" : [ "catalog-access-control" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "aclId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ],
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Removes a catalog item access control list entry ",
+        "description" : "Removes a catalog item access control list entry",
+        "operationId" : "DELETE_catalogItemACLEntry",
+        "tags" : [ "catalog-access-control" ]
+      }
+    },
+    "/catalogDefinitionTypes" : {
+      "parameters" : [ {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ],
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of catalog definition types."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogDefinitionType"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Lists supported types for CatalogItems",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionTypes",
+        "security" : [ ]
+      }
+    },
+    "/catalogDefinitionTypes/{definitionType}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogDefinitionType"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieves the definition for a specific catalog item type.",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionType",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogDefinitionTypes/{definitionType}/subtypes/{definitionSubType}/revisions/{revisionNumber}/{specType}/{propertyName}/raw" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Lists the specs for a property of the catalog definition type, subtype, revision and specType",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionRevisionSpec",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "definitionSubType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "specType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true,
+        "enum" : [ "subscription", "revision", "catalogItem" ]
+      }, {
+        "name" : "propertyName",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogDefinitionTypes/{definitionType}/subtypes/{definitionSubType}/revisions/{revisionNumber}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogDefinitionRevision"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieves a revision of a Catalog definition",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionRevision",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "definitionSubType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogDefinitionTypes/{definitionType}/subtypes/{definitionSubType}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogDefinitionSubtype"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "List details about a Catalog Item Definition subtype",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionSubtypesForType",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "definitionSubType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogDefinitionTypes/{definitionType}/subtypes/{definitionSubType}/revisions" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total count of revisions for the catalog definition for the definition subtype."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CatalogDefinitionRevision"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "tags" : [ "definition" ],
+        "summary" : "List revisions for a specific definition type and subtype",
+        "operationId" : "GET_catalogItemDefinitionSubtypeRevision",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "definitionSubType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogDefinitionTypes/{definitionType}/subtypes/{definitionSubType}/revisions/{revisionNumber}/docs" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Generates the swagger definition for the catalogItems for this specific definition revision",
+        "tags" : [ "definition" ],
+        "operationId" : "GET_CatalogItemDefinitionSubtypeRevisionSwagger",
+        "security" : [ ]
+      },
+      "parameters" : [ {
+        "name" : "definitionType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "definitionSubType",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}/properties" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item revision properties."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve the revision properties",
+        "operationId" : "GET_catalogItemRevisionProperties",
+        "tags" : [ "catalog-items" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}/properties/{propertyKey}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve the revision property key value",
+        "operationId" : "GET_catalogItemRevisionProperty",
+        "tags" : [ "catalog-items" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "propertyKey",
+        "in" : "path",
+        "type" : "string",
+        "required" : true,
+        "description" : "Available Property keys are dynamic depending on the Catalog Item definitionType, definitionSubType and definitionRevision.\ndefinitionType | definitionSubType | revision | propertyKey | schema type | description | property schema\n-------------- | ----------------- | -------- | -------- | ------ | ---- | ---\nAPI | swaggerv2 | 1 |  swagger | JSON | Open API V2 specification. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/revision/swagger/raw) \nAPI | swaggerv2 | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/revision/documentation/raw) \nAPI | swaggerv2 | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/revision/additionalData/raw) \nAPI | oas3 | 1 |  specification | JSON | Open API V3 specification. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/revision/specification/raw) \nAPI | oas3 | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/revision/documentation/raw) \nAPI | oas3 | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/revision/additionalData/raw) \nAPI | asyncapi | 1 |  specification | JSON | AsyncAPI V2 specification. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/revision/specification/raw) \nAPI | asyncapi | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/revision/documentation/raw) \nAPI | asyncapi | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/revision/additionalData/raw) \nAPI | wsdl | 1 |  specification | WSDL | Base64 encoded WSDL specification. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/revision/specification/raw) \nAPI | wsdl | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/revision/documentation/raw) \nAPI | wsdl | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/revision/additionalData/raw) \nAPI | protobuf | 1 |  specification | PROTOBUF | Base64 encoded Protobuf specification. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/revision/specification/raw) \nAPI | protobuf | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/revision/documentation/raw) \nAPI | protobuf | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/revision/additionalData/raw) \nAPI | graphql | 1 |  sdl | GRAPHQL | Base64 encoded GraphQL sdl. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/revision/sdl/raw) \nAPI | graphql | 1 |  servers | JSON | GraphQL server endpoints. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/revision/servers/raw) \nAPI | graphql | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/revision/documentation/raw) \nAPI | graphql | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/revision/additionalData/raw) \nAPI | unstructured | 1 |  data | UNSTRUCTURED | Base64 encoded data that can be attached to the revision. The content properties is defined by the &#39;dataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/revision/data/raw) \nAPI | unstructured | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/revision/documentation/raw) \nAPI | unstructured | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/revision/additionalData/raw) \nMFT | servicedefinition | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/MFT/subtypes/servicedefinition/revisions/1/revision/documentation/raw) \nCUSTOM | unstructured | 1 |  data | UNSTRUCTURED | Base64 encoded data that can be attached to the revision. The content is defined by the &#39;dataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/revision/data/raw) \nCUSTOM | unstructured | 1 |  additionalData | UNSTRUCTURED | Additional Base64 encoded data that can be attached to the revision. The content is defined by the &#39;additionalDataAccessInfo&#39; Catalog Item property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/revision/additionalData/raw) \nCUSTOM | unstructured | 1 |  documentation | JSON | Markdown documentation. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/revision/documentation/raw) \n"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update the revision property key",
+        "operationId" : "PUT_catalogItemRevisionProperty",
+        "tags" : [ "catalog-items" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptions/{subscriptionId}/properties" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item subscription properties."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve the subscription properties",
+        "operationId" : "GET_catalogItemSubscriptionProperties",
+        "tags" : [ "subscriptions" ]
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "subscriptionId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/subscriptions/{subscriptionId}/properties/{propertyKey}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/400"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get a subscription instance property matching the provided key",
+        "operationId" : "GET_catalogItemSubscriptionInstanceProperty"
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "subscriptionId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "propertyKey",
+        "in" : "path",
+        "type" : "string",
+        "required" : true,
+        "description" : "Available Property keys are dynamic depending on the Catalog Item definitionType, definitionSubType and definitionRevision.\ndefinitionType | definitionSubType | revision | propertyKey | schema type | description \n-------------- | ----------------- | -------- | -------- | ------ | ---- \nAPI | swaggerv2 | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | oas3 | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | asyncapi | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | wsdl | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | protobuf | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | graphql | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nAPI | unstructured | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nMFT | servicedefinition | 1 |  participants | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nMFT | servicedefinition | 1 |  parameters | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \nCUSTOM | unstructured | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. \n"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a catalog item subscription instance property matching the provided key",
+        "operationId" : "PUT_catalogItemSubscriptionInstanceProperty",
+        "tags" : [ "subscriptions" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptions/{subscriptionId}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemSubscription"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "tags" : [ "subscriptions" ],
+        "summary" : "Retrieve a specific subscription",
+        "operationId" : "GET_subscription"
+      },
+      "parameters" : [ {
+        "in" : "query",
+        "name" : "embed",
+        "type" : "string",
+        "enum" : [ "properties.value" ],
+        "description" : "Specified additional information to be embeeded into the Catalog Item properties"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "subscriptionId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      } ],
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : ""
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Delete a subscription",
+        "operationId" : "DELETE_subscription",
+        "tags" : [ "subscriptions" ]
+      },
+      "put" : {
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemSubscription"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the updated catalog item subscription.",
+            "examples" : {
+              "application/json" : { }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemSubscription"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update catalog item subscription",
+        "operationId" : "PUT_catalogItemSubscription",
+        "tags" : [ "subscriptions" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/properties" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item properties."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve the catalog item properties",
+        "operationId" : "GET_catalogItemProperties",
+        "tags" : [ "catalog-items" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/properties/{propertyKey}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve a specific property defined by the property spec of the catalog type/subtype/revision",
+        "operationId" : "GET_catalogItemProperty",
+        "tags" : [ "catalog-items" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "propertyKey",
+        "in" : "path",
+        "type" : "string",
+        "required" : true,
+        "description" : "Available Property keys are dynamic depending on the Catalog Item definitionType, definitionSubType and definitionRevision.\ndefinitionType | definitionSubType | revision | propertyKey | schema type | description | property schema\n-------------- | ----------------- | -------- | -------- | ------ | ---- | ---\nAPI | swaggerv2 | 1 |  accessInfo | JSON | Amplify Central linked API Proxy details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/catalogItem/accessInfo/raw) \nAPI | swaggerv2 | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | swaggerv2 | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | oas3 | 1 |  accessInfo | JSON | Amplify Central linked API Proxy details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/catalogItem/accessInfo/raw) \nAPI | oas3 | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | oas3 | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | asyncapi | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | asyncapi | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | wsdl | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | wsdl | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | protobuf | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | protobuf | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | graphql | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | graphql | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nAPI | unstructured | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/catalogItem/apiServerInfo/raw) \nAPI | unstructured | 1 |  dataAccessInfo | JSON | Defines the content details of the Catalog Item unstructured data provided in the revision &#39;data&#39; property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/catalogItem/dataAccessInfo/raw) \nAPI | unstructured | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the additionalData available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/catalogItem/additionalDataAccessInfo/raw) \nCUSTOM | unstructured | 1 |  apiServerInfo | JSON | API Server linked resources details. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/catalogItem/apiServerInfo/raw) \nCUSTOM | unstructured | 1 |  dataAccessInfo | JSON | Defines the content details of &#39;data&#39; revision property. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/catalogItem/dataAccessInfo/raw) \nCUSTOM | unstructured | 1 |  additionalDataAccessInfo | JSON | Defines the content details of the &#39;additionalData&#39; available at the revision level. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/catalogItem/additionalDataAccessInfo/raw) \n"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a Catalog Item property",
+        "operationId" : "PUT_catalogItemProperty",
+        "tags" : [ "catalog-items" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptionDefinition" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemSubscriptionDefinition"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get the catalog item subscription definition info",
+        "operationId" : "GET_catalogItemSubscriptionDefinition",
+        "tags" : [ "subscription-definition" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemSubscriptionDefinition"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "operationId" : "PUT_catalogItemSubscriptionDefinition",
+        "description" : "Sets the Catalog Item Subscription options",
+        "summary" : "Sets the Catalog Item subscription definition",
+        "tags" : [ "subscription-definition" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/subscriptionDefinition/properties/{propertyKey}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemProperty"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "tags" : [ "subscription-definition" ],
+        "operationId" : "GET_cataloItemSubscriptionProperty",
+        "summary" : "Retrieve a catalog item subscription key"
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "propertyKey",
+        "in" : "path",
+        "type" : "string",
+        "required" : true,
+        "description" : "Available Property keys are dynamic depending on the Catalog Item definitionType, definitionSubType and definitionRevision.\ndefinitionType | definitionSubType | revision | propertyKey | schema type | description | property schema\n-------------- | ----------------- | -------- | -------- | ------ | ---- | ---\nAPI | swaggerv2 | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/swaggerv2/revisions/1/subscription/profile/raw) \nAPI | oas3 | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/oas3/revisions/1/subscription/profile/raw) \nAPI | asyncapi | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/asyncapi/revisions/1/subscription/profile/raw) \nAPI | wsdl | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/wsdl/revisions/1/subscription/profile/raw) \nAPI | protobuf | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/protobuf/revisions/1/subscription/profile/raw) \nAPI | graphql | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/graphql/revisions/1/subscription/profile/raw) \nAPI | unstructured | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/API/subtypes/unstructured/revisions/1/subscription/profile/raw) \nMFT | servicedefinition | 1 |  participants | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/MFT/subtypes/servicedefinition/revisions/1/subscription/participants/raw) \nMFT | servicedefinition | 1 |  parameters | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/MFT/subtypes/servicedefinition/revisions/1/subscription/parameters/raw) \nCUSTOM | unstructured | 1 |  profile | JSON | JSON schema to describe the subscription details required from a Consumer when subscribing to the Catalog Item. | [link](https://apicentral.axway.com/api/unifiedCatalog/v1/catalogDefinitionTypes/CUSTOM/subtypes/unstructured/revisions/1/subscription/profile/raw) \n"
+      } ],
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a catalog item subscription key property",
+        "operationId" : "PUT_catalogItemSubscriptionProperty",
+        "tags" : [ "subscription-definition" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/relationships" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item relationships."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/EntityRelationship"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "List of relationships for the catalog item",
+        "operationId" : "GET_CatalogItemRelationships",
+        "tags" : [ "catalog-items" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/PageSizeParam"
+      }, {
+        "$ref" : "#/parameters/PageNumberParam"
+      }, {
+        "in" : "query",
+        "name" : "query",
+        "type" : "string",
+        "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n  type\n  value\n  key\n  spec\n  Documentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser\nrequired: false"
+      }, {
+        "name" : "sort",
+        "in" : "query",
+        "type" : "array",
+        "items" : {
+          "type" : "string"
+        },
+        "collectionFormat" : "multi",
+        "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n      type",
+        "required" : false
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/subscriptions/{subscriptionId}/relationships" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item susbcription relationships."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/EntityRelationship"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get list of catalog items subscription relationships",
+        "tags" : [ "subscriptions" ],
+        "produces" : [ "application/json" ],
+        "operationId" : "getCatalogItemSubscriptionRelationships"
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "subscriptionId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/PageSizeParam"
+      }, {
+        "$ref" : "#/parameters/PageNumberParam"
+      }, {
+        "in" : "query",
+        "name" : "query",
+        "type" : "string",
+        "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n  type\n  value\n  key\n  spec\n  Documentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser\nrequired: false"
+      }, {
+        "name" : "sort",
+        "in" : "query",
+        "type" : "array",
+        "items" : {
+          "type" : "string"
+        },
+        "collectionFormat" : "multi",
+        "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n      type",
+        "required" : false
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/categories" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item categories."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Category"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve catalog item categories",
+        "operationId" : "GET_CatalogItemCategories",
+        "tags" : [ "categories" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/PageSizeParam"
+      }, {
+        "$ref" : "#/parameters/PageNumberParam"
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "in" : "query",
+        "name" : "query",
+        "type" : "string",
+        "description" : "Query string for filtering entity. Expressed in FIQL/RSQL language.\nAllowed fields for filtering:\n  id\n  name\n  metadata.createTimestamp\n  audit.createTimestamp (same as metadata.createTimestamp)\n  metadata.modifyTimestamp\n  audit.modifyTimestamp (same as metadata.modifyTimestamp)\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser",
+        "required" : false
+      }, {
+        "name" : "sort",
+        "in" : "query",
+        "type" : "array",
+        "items" : {
+          "type" : "string"
+        },
+        "collectionFormat" : "multi",
+        "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n        name\n        metadata.createTimestamp\n        audit.createTimestamp (same as metadata.createTimestamp)\n        createTime (same as metadata.createTimestamp)\n        metadata.modifyTimestamp\n        audit.modifyTimestamp (same as metadata.modifyTimestamp)\n        modifyTime (same as metadata.createTimestamp)",
+        "required" : false
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/categoriesReferences" : {
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              },
+              "description" : "A list of categories ids"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Define the catalog item categories",
+        "operationId" : "PUT_CatalogItemCategoriesReferences",
+        "tags" : [ "categories" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "body",
+        "in" : "body",
+        "schema" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "description" : "A list of categories ids"
+        }
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}/properties/resources" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "headers" : {
+              "X-Axway-Total-Count" : {
+                "type" : "integer",
+                "description" : "Total number of catalog item revision resources."
+              }
+            },
+            "schema" : {
+              "title" : "Resources",
+              "type" : "array",
+              "items" : {
+                "allOf" : [ {
+                  "$ref" : "#/definitions/ExternalUrlResource"
+                } ]
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve catalog item revision resources",
+        "operationId" : "GET_CatalogItemRevisionResources",
+        "tags" : [ "resources" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "expand",
+          "type" : "string",
+          "enum" : [ "image" ]
+        }, {
+          "$ref" : "#/parameters/PageSizeParam"
+        }, {
+          "$ref" : "#/parameters/PageNumberParam"
+        } ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "allOf" : [ {
+                "$ref" : "#/definitions/ExternalUrlResource"
+              } ]
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Create a catalog item revision resource",
+        "operationId" : "POST_CatalogItemRevisionResource",
+        "tags" : [ "resources" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/ExternalUrlResource"
+            } ]
+          }
+        } ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}/properties/resources/{resourceId}" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "allOf" : [ {
+                "$ref" : "#/definitions/ExternalUrlResource"
+              } ]
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Get a catalog item revision resource",
+        "operationId" : "GET_CatalogItemRevisionResource",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "embed",
+          "type" : "string",
+          "enum" : [ "image" ]
+        } ],
+        "tags" : [ "resources" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "resourceId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "delete" : {
+        "responses" : {
+          "204" : {
+            "description" : "",
+            "schema" : {
+              "type" : "object",
+              "properties" : { }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Delete a catalog item revision resource",
+        "tags" : [ "resources" ],
+        "operationId" : "DELETE_CatalogItemRevisionResource"
+      },
+      "put" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "allOf" : [ {
+                "$ref" : "#/definitions/ExternalUrlResource"
+              } ]
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "409" : {
+            "$ref" : "#/responses/409"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Update a catalog item revision resource",
+        "operationId" : "PUT_CatalogItemRevisionResource",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/ExternalUrlResource"
+            } ]
+          }
+        } ],
+        "tags" : [ "resources" ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/revisions/{revisionNumber}/properties/resources/{resourceId}/image" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemImage"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve a catalog item revision resource image",
+        "operationId" : "GET_CatalogItemRevisionResourceImage",
+        "tags" : [ "resources" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "revisionNumber",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "name" : "resourceId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      } ],
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/CatalogItemImage"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Set the catalog item revision resource image",
+        "operationId" : "POST_CatalogItemRevisionResourceImage",
+        "tags" : [ "resources" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CatalogItemImage"
+          }
+        } ]
+      }
+    },
+    "/catalogItems/{catalogItemId}/views/count" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "integer"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve views count of catalog item",
+        "operationId" : "GET_CatalogItemViewsCount",
+        "tags" : [ "catalog-views" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "from",
+        "in" : "query",
+        "type" : "integer",
+        "format" : "int64",
+        "minimum" : 0,
+        "required" : false,
+        "description" : "Date-time specified in epoch time (milliseconds). Defaults to catalog item create timestamp.\n"
+      }, {
+        "name" : "to",
+        "in" : "query",
+        "type" : "integer",
+        "format" : "int64",
+        "minimum" : 0,
+        "required" : false,
+        "description" : "Date-time specified in epoch time (milliseconds). Defaults to current.\n"
+      } ]
+    },
+    "/catalogItems/{catalogItemId}/views/chart" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Histogram data for transaction counts",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ChartDataPoint"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve views chart of catalog item",
+        "operationId" : "GET_CatalogItemViewsChart",
+        "tags" : [ "catalog-views" ]
+      },
+      "parameters" : [ {
+        "name" : "catalogItemId",
+        "in" : "path",
+        "type" : "string",
+        "required" : true
+      }, {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "name" : "from",
+        "in" : "query",
+        "type" : "integer",
+        "format" : "int64",
+        "minimum" : 0,
+        "required" : false,
+        "description" : "Date-time specified in epoch time (milliseconds). Defaults to catalog item create timestamp.\n"
+      }, {
+        "name" : "to",
+        "in" : "query",
+        "type" : "integer",
+        "format" : "int64",
+        "minimum" : 0,
+        "required" : false,
+        "description" : "Date-time specified in epoch time (milliseconds). Defaults to current.\n"
+      }, {
+        "name" : "interval",
+        "in" : "query",
+        "type" : "string",
+        "pattern" : "^[1-9]\\d*[smhd]$",
+        "required" : true,
+        "description" : "interval to get the views chart eg: 1m, 1s, 1d."
+      } ]
+    },
+    "/analytics" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Analytics data.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AnalyticsResult"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          }
+        },
+        "summary" : "Retrieve analytics data",
+        "operationId" : "GET_Analytics",
+        "tags" : [ "analytics" ]
+      },
+      "parameters" : [ {
+        "$ref" : "#/parameters/TeamHeader"
+      }, {
+        "$ref" : "#/parameters/TenantHeader"
+      }, {
+        "$ref" : "#/parameters/PageSizeParam"
+      }, {
+        "$ref" : "#/parameters/PageNumberParam"
+      }, {
+        "in" : "query",
+        "name" : "query",
+        "type" : "string",
+        "description" : "Query string for filtering results expressed in FIQL/RSQL language.\nDocumentation link to help with multiple values for query: https://github.com/jirutka/rsql-parser\nAvailable fields are dependent on the type query parameter.\n\nFor catalogItemsByType the query filtering is done for catalog item properties.\nFor catalogItemsByCategory the query filtering is done for catalog item properties.\nFor subscriptionsByState the query filtering is done for subscription fields.",
+        "required" : false
+      }, {
+        "name" : "type",
+        "in" : "query",
+        "type" : "string",
+        "required" : true,
+        "enum" : [ "catalogItemsByType", "catalogItemsByCategory", "subscriptionsByState" ]
+      }, {
+        "name" : "sort",
+        "in" : "query",
+        "type" : "array",
+        "items" : {
+          "type" : "string"
+        },
+        "collectionFormat" : "multi",
+        "description" : "Query string for sorting entity.\nAllowed fields for sorting:\n        name",
+        "required" : false
+      } ]
+    }
+  },
+  "tags" : [ {
+    "name" : "definition"
+  }, {
+    "name" : "catalog-items"
+  }, {
+    "name" : "subscription-definition"
+  }, {
+    "name" : "subscriptions"
+  }, {
+    "name" : "categories"
+  }, {
+    "name" : "catalog-access-control"
+  }, {
+    "name" : "resources"
+  }, {
+    "name" : "catalog-views"
+  }, {
+    "name" : "analytics"
+  } ],
+  "definitions" : {
+    "Category" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string",
+          "description" : "Generated identifier for the resource",
+          "maxLength" : 32,
+          "minLength" : 32
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Name of the category",
+          "maxLength" : 100,
+          "minLength" : 1
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the category",
+          "maxLength" : 350
+        },
+        "externalId" : {
+          "type" : "string",
+          "description" : "Exernal ID representing the source caregory id from Amplify Central.",
+          "maxLength" : 32,
+          "minLength" : 32
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "CatalogItem" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string",
+          "description" : "Generated identifier for the resource",
+          "maxLength" : 32,
+          "minLength" : 32
+        },
+        "owningTeamId" : {
+          "type" : "string",
+          "description" : "Id of the owning team of this catalog item",
+          "maxLength" : 36
+        },
+        "definitionType" : {
+          "type" : "string",
+          "description" : "Type of the definition for the catalog item"
+        },
+        "definitionSubType" : {
+          "type" : "string",
+          "description" : "Sub-Type of the definition for the catalog item"
+        },
+        "definitionRevision" : {
+          "type" : "integer",
+          "description" : "Revision of the definition for the catalog item"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Name of the catalog item",
+          "maxLength" : 100,
+          "minLength" : 1,
+          "pattern" : "^(?=.*[^\\t ]).+$"
+        },
+        "relationships" : {
+          "$ref" : "#/definitions/EntityRelationship"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the catalog item",
+          "maxLength" : 350
+        },
+        "tags" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 80
+          }
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        },
+        "visibility" : {
+          "type" : "string",
+          "enum" : [ "RESTRICTED", "PUBLIC" ],
+          "default" : "RESTRICTED"
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ "UNPUBLISHED", "PUBLISHED" ],
+          "default" : "UNPUBLISHED"
+        },
+        "access" : {
+          "type" : "string",
+          "enum" : [ "read", "write", "admin" ]
+        },
+        "availableRevisions" : {
+          "readOnly" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "integer"
+          }
+        },
+        "latestVersion" : {
+          "readOnly" : true,
+          "description" : "Latest version of the published revision.",
+          "maxLength" : 255,
+          "type" : "string"
+        },
+        "totalSubscriptions" : {
+          "readOnly" : true,
+          "type" : "integer",
+          "description" : "Number of subscriptions for the catalog item"
+        },
+        "latestVersionDetails" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/CatalogItemRevision"
+        },
+        "image" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/CatalogItemImage"
+        },
+        "categories" : {
+          "readOnly" : true,
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Category"
+          }
+        },
+        "acl" : {
+          "readOnly" : true,
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AccessControlItem"
+          }
+        }
+      },
+      "required" : [ "definitionType", "definitionSubType", "definitionRevision", "name", "visibility", "state" ]
+    },
+    "AuditMetadata" : {
+      "type" : "object",
+      "readOnly" : true,
+      "properties" : {
+        "createTimestamp" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "The creation time"
+        },
+        "createUserId" : {
+          "type" : "string",
+          "minLength" : 32,
+          "maxLength" : 52,
+          "description" : "Id of the user that created the entity"
+        },
+        "modifyTimestamp" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "The last modification time"
+        },
+        "modifyUserId" : {
+          "type" : "string",
+          "minLength" : 32,
+          "maxLength" : 52,
+          "description" : "Id of the user that last modified the entity"
+        }
+      },
+      "description" : "Audit information"
+    },
+    "CatalogItemProperty" : {
+      "type" : "object",
+      "properties" : {
+        "key" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "object",
+          "x-axway-ignore-required" : true
+        }
+      },
+      "required" : [ "key", "value" ]
+    },
+    "CatalogItemRevision" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string",
+          "description" : "Generated identifier for the resource",
+          "maxLength" : 32,
+          "minLength" : 32
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "version" : {
+          "type" : "string",
+          "maxLength" : 255,
+          "pattern" : "^(?=.*[^\\t ]).+$",
+          "description" : "Version name for the revision."
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ "UNPUBLISHED", "PUBLISHED" ],
+          "default" : "UNPUBLISHED"
+        },
+        "status" : {
+          "type" : "string",
+          "maxLength" : 255
+        }
+      },
+      "required" : [ "version", "state" ]
+    },
+    "CatalogItemSubscription" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string"
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogItemProperty"
+          }
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "Current state of the subscription.",
+          "enum" : [ "REQUESTED", "CHANGE_REQUESTED", "APPROVED", "REJECTED", "ACTIVE", "UNSUBSCRIBED", "UNSUBSCRIBE_INITIATED", "FAILED_TO_SUBSCRIBE", "FAILED_TO_UNSUBSCRIBE" ]
+        },
+        "stateDescription" : {
+          "type" : "string",
+          "description" : "Description of the current subscription state.",
+          "maxLength" : 350
+        },
+        "catalogItemId" : {
+          "type" : "string"
+        },
+        "owningTeamId" : {
+          "type" : "string"
+        },
+        "deletable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "nextPossibleStates" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "REQUESTED", "CHANGE_REQUESTED", "ACTIVE", "APPROVED", "REJECTED", "UNSUBSCRIBED", "UNSUBSCRIBE_INITIATED", "FAILED_TO_SUBSCRIBE", "FAILED_TO_UNSUBSCRIBE" ]
+          }
+        },
+        "allowedTransitionStates" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "REQUESTED", "CHANGE_REQUESTED", "ACTIVE", "APPROVED", "REJECTED", "UNSUBSCRIBED", "UNSUBSCRIBE_INITIATED", "FAILED_TO_SUBSCRIBE", "FAILED_TO_UNSUBSCRIBE" ]
+          }
+        },
+        "updates" : {
+          "type" : "object",
+          "readOnly" : true,
+          "description" : "Describes the conditions and consequences of the subscription being updated. Properties are provided by the server.",
+          "properties" : {
+            "allowed" : {
+              "type" : "boolean",
+              "description" : "Defines on if updates of the subscription are allowed in its current state."
+            },
+            "transitionState" : {
+              "type" : "string",
+              "description" : "Defines the state in which the subscription will move if it will get updated. If not present, an update will not trigger a state transition.",
+              "enum" : [ "CHANGE_REQUESTED" ]
+            }
+          }
+        },
+        "name" : {
+          "type" : "string",
+          "maxLength" : 100
+        }
+      }
+    },
+    "AccessControlItem" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string"
+        },
+        "entityType" : {
+          "type" : "string",
+          "enum" : [ "TEAM" ]
+        },
+        "entityId" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        }
+      },
+      "required" : [ "entityType", "entityId" ]
+    },
+    "ChartDataPoint" : {
+      "title" : "ChartDataPoint",
+      "required" : [ "time" ],
+      "type" : "object",
+      "properties" : {
+        "time" : {
+          "type" : "number",
+          "format" : "long",
+          "description" : "Data point timestamp"
+        },
+        "total" : {
+          "type" : "number",
+          "format" : "long",
+          "description" : "Value based on chart type"
+        }
+      }
+    },
+    "AnalyticsResult" : {
+      "type" : "object",
+      "properties" : {
+        "resourceType" : {
+          "type" : "string",
+          "description" : "The type of the resource on which the aggregation was done.",
+          "enum" : [ "CATALOG_ITEM_DEFINITION_TYPE", "CATALOG_ITEM_DEFINITION_SUB_TYPE", "CATEGORY", "SUBSCRIPTION_BY_STATE" ]
+        },
+        "value" : {
+          "type" : "integer",
+          "description" : "Value of the analytics results."
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "The identifier of the analyzed resource."
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "The name of the analyzed resource."
+        },
+        "items" : {
+          "description" : "Children of the analyzed resource.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AnalyticsResult"
+          }
+        }
+      },
+      "required" : [ "name", "resourceType", "value" ]
+    },
+    "CatalogItemSubscriptionState" : {
+      "type" : "object",
+      "description" : "A state of the catalog item subscription",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the subscription state",
+          "maxLength" : 350
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ "REQUESTED", "CHANGE_REQUESTED", "ACTIVE", "UNSUBSCRIBED", "APPROVED", "REJECTED", "UNSUBSCRIBE_INITIATED", "FAILED_TO_SUBSCRIBE", "FAILED_TO_UNSUBSCRIBE" ]
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        }
+      },
+      "required" : [ "state" ]
+    },
+    "CatalogItemInit" : {
+      "type" : "object",
+      "properties" : {
+        "owningTeamId" : {
+          "type" : "string",
+          "description" : "Id of the owning team of this catalog item",
+          "maxLength" : 36
+        },
+        "definitionType" : {
+          "type" : "string",
+          "description" : "Type of the definition for the catalog item"
+        },
+        "definitionSubType" : {
+          "type" : "string",
+          "description" : "Sub-Type of the definition for the catalog item"
+        },
+        "definitionRevision" : {
+          "type" : "integer",
+          "description" : "Revision of the definition for the catalog item"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Name of the catalog item",
+          "maxLength" : 100,
+          "pattern" : "^(?=.*[^\\t ]).+$"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the catalog item",
+          "maxLength" : 350
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogItemProperty"
+          }
+        },
+        "tags" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 80
+          }
+        },
+        "visibility" : {
+          "type" : "string",
+          "enum" : [ "RESTRICTED", "PUBLIC" ],
+          "default" : "RESTRICTED"
+        },
+        "subscription" : {
+          "$ref" : "#/definitions/CatalogItemSubscriptionDefinition"
+        },
+        "revision" : {
+          "$ref" : "#/definitions/CatalogItemInitRevision"
+        },
+        "categoriesReferences" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "description" : "A list of categories ids."
+        }
+      },
+      "required" : [ "definitionType", "definitionSubType", "definitionRevision", "name", "properties", "visibility", "subscription", "revision" ]
+    },
+    "CatalogDefinitionType" : {
+      "type" : "object",
+      "description" : "Defines the type of a CatalogItem",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "subtypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogDefinitionSubtype"
+          }
+        }
+      }
+    },
+    "CatalogDefinitionSubtype" : {
+      "type" : "object",
+      "description" : "Defines the CatalogItem subtype value",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "revisions" : {
+          "type" : "array",
+          "items" : {
+            "type" : "integer"
+          }
+        },
+        "latestRevision" : {
+          "$ref" : "#/definitions/CatalogDefinitionRevision"
+        }
+      }
+    },
+    "CatalogDefinitionPropertySpec" : {
+      "type" : "object",
+      "description" : "Defines the CatalogItem properties specifications.",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "schemaType" : {
+          "type" : "string",
+          "enum" : [ "JSON", "WSDL", "PROTOBUF", "GRAPHQL", "UNSTRUCTURED" ]
+        },
+        "immutable" : {
+          "type" : "boolean"
+        },
+        "required" : {
+          "type" : "boolean"
+        },
+        "allowedRoles" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "catalogItemSpecRef" : {
+          "type" : "string",
+          "description" : "Indicates if spec data processing is tight to another spec data key properties set."
+        },
+        "failFast" : {
+          "type" : "boolean",
+          "description" : "Indicates if validation of the spec will fail fast, at the first encountered error."
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Property description."
+        }
+      }
+    },
+    "CatalogDefinitionRevision" : {
+      "type" : "object",
+      "description" : "Defines the properties specs for a specific definition",
+      "properties" : {
+        "value" : {
+          "type" : "integer"
+        },
+        "revision" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogDefinitionPropertySpec"
+          }
+        },
+        "subscription" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogDefinitionPropertySpec"
+          }
+        },
+        "catalogItem" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogDefinitionPropertySpec"
+          }
+        }
+      }
+    },
+    "CatalogItemSubscriptionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "enabled" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "autoSubscribe" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "autoUnsubscribe" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogItemProperty"
+          }
+        }
+      }
+    },
+    "CatalogItemImage" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "string",
+          "enum" : [ "image/jpeg", "image/png" ],
+          "default" : "image/jpeg",
+          "description" : "Content-type of the image"
+        },
+        "base64" : {
+          "type" : "string",
+          "description" : "Base64 encoded image",
+          "pattern" : "(([A-Za-z0-9+\\/]{4})*([A-Za-z0-9+\\/]{3}=|[A-Za-z0-9+\\/]{2}==)?){1}"
+        }
+      },
+      "required" : [ "data", "base64" ]
+    },
+    "CatalogItemInitRevision" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "readOnly" : true,
+          "type" : "string",
+          "description" : "Generated identifier for the resource",
+          "maxLength" : 32,
+          "minLength" : 32
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CatalogItemProperty"
+          }
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "version" : {
+          "type" : "string",
+          "maxLength" : 255,
+          "pattern" : "^(?=.*[^\\t ]).+$",
+          "description" : "Version name for the revision."
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ "UNPUBLISHED", "PUBLISHED" ],
+          "default" : "UNPUBLISHED"
+        },
+        "status" : {
+          "type" : "string",
+          "maxLength" : 255
+        }
+      },
+      "required" : [ "properties", "version", "state" ]
+    },
+    "EntityRelationship" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "spec" : {
+          "type" : "string"
+        },
+        "fromCompositeKey" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "GenericResource" : {
+      "type" : "object",
+      "discriminator" : "type",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "ExternalUrlResource" ]
+        },
+        "tags" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 100
+        },
+        "description" : {
+          "type" : "string",
+          "maxLength" : 350
+        },
+        "metadata" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/AuditMetadata"
+        },
+        "image" : {
+          "$ref" : "#/definitions/CatalogItemImage",
+          "description" : "Only available when listing is done with expand set to true"
+        }
+      },
+      "required" : [ "type", "name" ]
+    },
+    "ExternalUrlResource" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/GenericResource"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "url" : {
+            "type" : "string",
+            "maxLength" : 256,
+            "pattern" : "^[\\w-_\\:\\.\\?\\/]*$",
+            "description" : "Defines the external resource address."
+          }
+        },
+        "required" : [ "url" ]
+      } ]
+    }
+  },
+  "responses" : {
+    "400" : {
+      "description" : "Failed to validate request parameters.",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "integer"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    },
+                    "tenantId" : {
+                      "type" : "string"
+                    },
+                    "authenticatedUserId" : {
+                      "type" : "string"
+                    },
+                    "transactionId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : 400,
+            "title" : "Bad Request",
+            "detail" : "Unable to process the request",
+            "meta" : {
+              "instanceId" : 123,
+              "tenantId" : 123,
+              "authenticatedUserId" : "userid",
+              "transactionId" : "xyz"
+            }
+          } ]
+        }
+      }
+    },
+    "401" : {
+      "description" : "Unauthorized. A valid authorization header was not provided with the request to authenticate.",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "integer"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : 401,
+            "title" : "Authentication error",
+            "detail" : "The user has not authenticated successfully.",
+            "meta" : {
+              "instanceId" : "xyz"
+            }
+          } ]
+        }
+      }
+    },
+    "403" : {
+      "description" : "Forbidden, the user does not have the correct permissions to call this API",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "integer"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : 403,
+            "title" : "Forbidden error",
+            "detail" : "The user does not have the required permissions to call this API.",
+            "meta" : {
+              "instanceId" : "xyz"
+            }
+          } ]
+        }
+      }
+    },
+    "404" : {
+      "description" : "We could not find the resource specified.",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "integer"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : 404,
+            "title" : "Not found error",
+            "detail" : "Resource specified does not exist.",
+            "meta" : {
+              "instanceId" : "xyz"
+            }
+          } ]
+        }
+      }
+    },
+    "409" : {
+      "description" : "Request conflicts with the current state of the server.",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "integer"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : 409,
+            "title" : "Conflict error",
+            "detail" : "CatalogItem with the name already exists",
+            "meta" : {
+              "instanceId" : "axway"
+            }
+          } ]
+        }
+      }
+    },
+    "500" : {
+      "description" : "Unexpected internal server error. Please retry the request.",
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "status" : {
+                  "type" : "string"
+                },
+                "title" : {
+                  "type" : "string"
+                },
+                "detail" : {
+                  "type" : "string"
+                },
+                "meta" : {
+                  "type" : "object",
+                  "properties" : {
+                    "instanceId" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples" : {
+        "application/json" : {
+          "errors" : [ {
+            "status" : "500",
+            "title" : "Unexpected error",
+            "detail" : "The server failed to process the request.",
+            "meta" : {
+              "instanceId" : "axway"
+            }
+          } ]
+        }
+      }
+    }
+  },
+  "host" : "apicentral.axway.com"
+}
