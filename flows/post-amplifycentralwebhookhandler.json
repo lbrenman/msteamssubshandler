@@ -23,7 +23,7 @@
 	"nodes": {
 		"rest.1": {
 			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
-			"name": "POST",
+			"name": "Send to Webhooksite",
 			"method": "post",
 			"parameters": [
 				{
@@ -44,7 +44,7 @@
 			"outputs": {
 				"2xx": {
 					"routes": [
-						"javascript.1"
+						"authz.1"
 					],
 					"context": "$.response",
 					"metaName": "2XX"
@@ -153,7 +153,7 @@
 				{
 					"name": "code",
 					"type": "string",
-					"value": "\"// console.log(data.request.body.type);\\n  // console.log(data.request.body.payload.subscription.currentState);\\n  \\n  let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  \\n  //https://apicentral.axway.com/catalog/explore\\n  \\n  let catalogItemName = data.request.body.payload.consumerInstance.name;\\n  let catalogItemId = data.request.body.payload.catalogItem.id;\\n  let catalogItemUrl = data.env.API_CENTRAL_URL+\\\"/catalog/explore\\\"+\\\"/\\\"+catalogItemId;\\n  \\n  /*\\n  let body = {\\n    Text: \\\"Subscription requested\\\"\\n  };\\n  */\\n  \\n  let body = {\\n    \\\"@type\\\": \\\"MessageCard\\\",\\n    \\\"@context\\\": \\\"http://schema.org/extensions\\\",\\n    \\\"themeColor\\\": \\\"0076D7\\\",\\n    \\\"summary\\\": \\\"API Subscription Approval Requested\\\",\\n    \\\"sections\\\": [{\\n        \\\"activityTitle\\\": \\\"API Subscription Approval Requested\\\",\\n        \\\"activitySubtitle\\\": \\\"Please review and approve or reject the request\\\",\\n        \\\"markdown\\\": true,\\n        \\\"facts\\\": [{\\n            \\\"name\\\": \\\"Catalog Item\\\",\\n            // \\\"value\\\": data.request.body.payload.consumerInstance.name\\n          \\t\\\"value\\\": \\\"[\\\"+catalogItemName+\\\"](\\\"+catalogItemUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Subscription\\\",\\n            \\\"value\\\": data.request.body.payload.subscription.name\\n        }],\\n    }],\\n    \\\"potentialAction\\\": [{\\n        \\\"@type\\\": \\\"ActionCard\\\",\\n        \\\"name\\\": \\\"Comment\\\",\\n        \\\"inputs\\\": [{\\n            \\\"@type\\\": \\\"TextInput\\\",\\n            \\\"id\\\": \\\"comment\\\",\\n            \\\"isMultiline\\\": false,\\n            \\\"title\\\": \\\"Please enter any comments\\\"\\n        }],\\n        \\\"actions\\\": [{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Approve\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Approved\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        },{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Reject\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Rejected\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        }]\\n    }]\\n};\\n  \\n  return {url,body};\""
+					"value": "\"let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  \\n  let catalogItemName = data.request.body.payload.consumerInstance.name;\\n  let catalogItemId = data.request.body.payload.catalogItem.id;\\n  let catalogItemUrl = data.env.API_CENTRAL_URL+\\\"/catalog/explore\\\"+\\\"/\\\"+catalogItemId;\\n  \\n  let subscriptionName = data.request.body.payload.subscription.name;\\n  let subscriptionId = data.request.body.payload.subscription.id;\\n  let subscriptionUrl = data.env.API_CENTRAL_URL+\\\"/catalog\\\"+\\\"/\\\"+catalogItemId+\\\"/subscriptions\\\"+\\\"/\\\"+subscriptionId;\\n  \\n  let requestorName = data.getUserResponse.body.result.firstname + \\\" \\\" + data.getUserResponse.body.result.lastname;\\n  let requesorUrl = \\\"https://platform.axway.com/user/\\\"+data.request.body.payload.subscription.metadata.createUserId;\\n  \\n  let requestorEmail = data.getUserResponse.body.result.email;\\n  let requestorEmailUrl = \\\"mailto:\\\"+data.getUserResponse.body.result.email;\\n  \\n  let body = {\\n    \\\"@type\\\": \\\"MessageCard\\\",\\n    \\\"@context\\\": \\\"http://schema.org/extensions\\\",\\n    \\\"themeColor\\\": \\\"0076D7\\\",\\n    \\\"summary\\\": \\\"API Subscription Approval Requested\\\",\\n    \\\"sections\\\": [{\\n        \\\"activityTitle\\\": \\\"API Subscription Approval Requested\\\",\\n        \\\"activitySubtitle\\\": \\\"Please review and approve or reject the request\\\",\\n        \\\"markdown\\\": true,\\n        \\\"facts\\\": [{\\n            \\\"name\\\": \\\"Catalog Item\\\",\\n            // \\\"value\\\": data.request.body.payload.consumerInstance.name\\n          \\t\\\"value\\\": \\\"[\\\"+catalogItemName+\\\"](\\\"+catalogItemUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Subscription\\\",\\n            \\\"value\\\": \\\"[\\\"+subscriptionName+\\\"](\\\"+subscriptionUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Name\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorName+\\\"](\\\"+requesorUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Email\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorEmail+\\\"](\\\"+requestorEmailUrl+\\\")\\\"\\n        }],\\n    }],\\n    \\\"potentialAction\\\": [{\\n        \\\"@type\\\": \\\"ActionCard\\\",\\n        \\\"name\\\": \\\"Comment\\\",\\n        \\\"inputs\\\": [{\\n            \\\"@type\\\": \\\"TextInput\\\",\\n            \\\"id\\\": \\\"comment\\\",\\n            \\\"isMultiline\\\": false,\\n            \\\"title\\\": \\\"Please enter any comments\\\"\\n        }],\\n        \\\"actions\\\": [{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Approve\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Approved\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        },{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Reject\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Rejected\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        }]\\n    }]\\n};\\n  \\n  return {url,body};\""
 				}
 			],
 			"outputs": {
@@ -174,7 +174,7 @@
 		},
 		"rest.2": {
 			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
-			"name": "POST",
+			"name": "Send to MS Teams",
 			"method": "post",
 			"parameters": [
 				{
@@ -246,7 +246,7 @@
 				{
 					"name": "code",
 					"type": "string",
-					"value": "\"// console.log(data.request.body.type);\\n  // console.log(data.request.body.payload.subscription.currentState);\\n  \\n  return data.request.body.type==='SubscriptionUpdatedEvent' && data.request.body.payload.subscription.currentState==='REQUESTED';\"",
+					"value": "\"// console.log(data.request.body.type);\\n  // console.log(data.request.body.payload.subscription.currentState);\\n  \\n  let type = data.request.body.type;\\n  let currentState = data.request.body.payload.subscription.currentState;\\n  \\n  return type==='SubscriptionUpdatedEvent' && currentState==='REQUESTED';\"",
 					"metaName": "Code",
 					"metaDescription": "A JavaScript function body. Supports `await` and returning promises. `data` is the value of the Data parameter. `logger` is the API Builder logger. See the docs for more info: https://docs.axway.com/bundle/api-builder/page/docs/developer_guide/flows/flow_nodes/javascript_flow_node/index.html"
 				}
@@ -304,6 +304,130 @@
 				}
 			},
 			"metaMethod": "Equals"
+		},
+		"javascript.3": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-javascript/javascript",
+			"name": "Prepare get user info",
+			"method": "Execute",
+			"parameters": [
+				{
+					"name": "data",
+					"type": "jsonpath",
+					"value": "$",
+					"metaName": "Data",
+					"metaDescription": "The value to apply as the `data` argument of the JavaScript code. For objects and arrays, `data` is passed by reference."
+				},
+				{
+					"name": "code",
+					"type": "string",
+					"value": "\"let userId = data.request.body.payload.subscription.metadata.createUserId;\\n  let url = 'https://platform.axway.com/api/v1/user/'+userId;\\n  \\n  let headers = {\\n    'Authorization': `Bearer ${data.credential}`,\\n    'Content-Type': 'application/json'\\n  };\\n  \\n  return {url,headers};\"",
+					"metaName": "Code",
+					"metaDescription": "A JavaScript function body. Supports `await` and returning promises. `data` is the value of the Data parameter. `logger` is the API Builder logger. See the docs for more info: https://docs.axway.com/bundle/api-builder/page/docs/developer_guide/flows/flow_nodes/javascript_flow_node/index.html"
+				}
+			],
+			"outputs": {
+				"next": {
+					"context": "$.result",
+					"routes": [
+						"rest.3"
+					],
+					"metaName": "Next"
+				},
+				"error": {
+					"context": "$.error",
+					"routes": [],
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "Execute"
+		},
+		"rest.3": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
+			"name": "Get user info",
+			"method": "get",
+			"parameters": [
+				{
+					"name": "url",
+					"type": "jsonpath",
+					"value": "$.result.url",
+					"metaName": "URL",
+					"metaDescription": "The target URL."
+				},
+				{
+					"name": "headers",
+					"type": "jsonpath",
+					"value": "$.result.headers",
+					"metaName": "Headers",
+					"metaDescription": "The HTTP headers to set."
+				}
+			],
+			"outputs": {
+				"2xx": {
+					"routes": [
+						"javascript.1"
+					],
+					"context": "$.getUserResponse",
+					"metaName": "2XX"
+				},
+				"3xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "3XX"
+				},
+				"4xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "4XX"
+				},
+				"5xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "5XX"
+				},
+				"error": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "GET"
+		},
+		"authz.1": {
+			"type": "nodehandler://axway-flow-authorization/authz",
+			"name": "Get Credential",
+			"method": "getCredential",
+			"parameters": [
+				{
+					"name": "name",
+					"type": "string",
+					"value": "\"Amplify Unified Catalog APIs OAuth2ClientCredentials_clientCredentials\"",
+					"metaName": "Name",
+					"metaDescription": "The name of the configured credential to find and return."
+				}
+			],
+			"outputs": {
+				"next": {
+					"context": "$.credential",
+					"routes": [
+						"javascript.3"
+					],
+					"metaName": "Next"
+				},
+				"error": {
+					"context": "$.error",
+					"routes": [],
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "Get Credential"
 		}
 	}
 }
