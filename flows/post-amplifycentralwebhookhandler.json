@@ -21,65 +21,6 @@
 	},
 	"start": "javascript.2",
 	"nodes": {
-		"rest.1": {
-			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
-			"name": "Send to Webhooksite",
-			"method": "post",
-			"parameters": [
-				{
-					"name": "url",
-					"type": "string",
-					"value": "\"https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a\"",
-					"metaName": "URL",
-					"metaDescription": "The target URL."
-				},
-				{
-					"name": "body",
-					"type": "jsonpath",
-					"value": "$.request.body",
-					"metaName": "Body",
-					"metaDescription": "The content to send."
-				}
-			],
-			"outputs": {
-				"2xx": {
-					"routes": [
-						"authz.1"
-					],
-					"context": "$.response",
-					"metaName": "2XX"
-				},
-				"3xx": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "3XX"
-				},
-				"4xx": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "4XX"
-				},
-				"5xx": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "5XX"
-				},
-				"error": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "Error"
-				}
-			},
-			"metaMethod": "POST"
-		},
 		"http.1": {
 			"type": "nodehandler://axway-flow/http",
 			"name": "Set HTTP Response",
@@ -153,7 +94,7 @@
 				{
 					"name": "code",
 					"type": "string",
-					"value": "\"let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  \\n  let catalogItemName = data.request.body.payload.consumerInstance.name;\\n  let catalogItemId = data.request.body.payload.catalogItem.id;\\n  let catalogItemUrl = data.env.API_CENTRAL_URL+\\\"/catalog/explore\\\"+\\\"/\\\"+catalogItemId;\\n  \\n  let subscriptionName = data.request.body.payload.subscription.name;\\n  let subscriptionId = data.request.body.payload.subscription.id;\\n  let subscriptionUrl = data.env.API_CENTRAL_URL+\\\"/catalog\\\"+\\\"/\\\"+catalogItemId+\\\"/subscriptions\\\"+\\\"/\\\"+subscriptionId;\\n  \\n  let requestorName = data.getUserResponse.body.result.firstname + \\\" \\\" + data.getUserResponse.body.result.lastname;\\n  let requesorUrl = \\\"https://platform.axway.com/user/\\\"+data.request.body.payload.subscription.metadata.createUserId;\\n  \\n  let requestorEmail = data.getUserResponse.body.result.email;\\n  let requestorEmailUrl = \\\"mailto:\\\"+data.getUserResponse.body.result.email;\\n  \\n  let body = {\\n    \\\"@type\\\": \\\"MessageCard\\\",\\n    \\\"@context\\\": \\\"http://schema.org/extensions\\\",\\n    \\\"themeColor\\\": \\\"0076D7\\\",\\n    \\\"summary\\\": \\\"API Subscription Approval Requested\\\",\\n    \\\"sections\\\": [{\\n        \\\"activityTitle\\\": \\\"API Subscription Approval Requested\\\",\\n        \\\"activitySubtitle\\\": \\\"Please review and approve or reject the request\\\",\\n        \\\"markdown\\\": true,\\n        \\\"facts\\\": [{\\n            \\\"name\\\": \\\"Catalog Item\\\",\\n            // \\\"value\\\": data.request.body.payload.consumerInstance.name\\n          \\t\\\"value\\\": \\\"[\\\"+catalogItemName+\\\"](\\\"+catalogItemUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Subscription\\\",\\n            \\\"value\\\": \\\"[\\\"+subscriptionName+\\\"](\\\"+subscriptionUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Name\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorName+\\\"](\\\"+requesorUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Email\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorEmail+\\\"](\\\"+requestorEmailUrl+\\\")\\\"\\n        }],\\n    }],\\n    \\\"potentialAction\\\": [{\\n        \\\"@type\\\": \\\"ActionCard\\\",\\n        \\\"name\\\": \\\"Comment\\\",\\n        \\\"inputs\\\": [{\\n            \\\"@type\\\": \\\"TextInput\\\",\\n            \\\"id\\\": \\\"comment\\\",\\n            \\\"isMultiline\\\": false,\\n            \\\"title\\\": \\\"Please enter any comments\\\"\\n        }],\\n        \\\"actions\\\": [{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Approve\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Approved\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        },{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Reject\\\",\\n            \\\"target\\\": 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a',\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Rejected\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        }]\\n    }]\\n};\\n  \\n  return {url,body};\""
+					"value": "\"let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  \\n  let catalogItemName = data.request.body.payload.consumerInstance.name;\\n  let catalogItemId = data.request.body.payload.catalogItem.id;\\n  let catalogItemUrl = data.env.API_CENTRAL_URL+\\\"/catalog/explore\\\"+\\\"/\\\"+catalogItemId;\\n  \\n  let subscriptionName = data.request.body.payload.subscription.name;\\n  let subscriptionId = data.request.body.payload.subscription.id;\\n  let subscriptionUrl = data.env.API_CENTRAL_URL+\\\"/catalog\\\"+\\\"/\\\"+catalogItemId+\\\"/subscriptions\\\"+\\\"/\\\"+subscriptionId;\\n  \\n  let requestorName = data.getUserResponse.body.result.firstname + \\\" \\\" + data.getUserResponse.body.result.lastname;\\n  let requesorUrl = \\\"https://platform.axway.com/user/\\\"+data.request.body.payload.subscription.metadata.createUserId;\\n  \\n  let requestorEmail = data.getUserResponse.body.result.email;\\n  let requestorEmailUrl = \\\"mailto:\\\"+data.getUserResponse.body.result.email;\\n  \\n  let approverUrl = 'https://webhook.site/180fff35-c16d-4abe-a479-ebfee0dfa42a';\\n  \\n  let body = {\\n    \\\"@type\\\": \\\"MessageCard\\\",\\n    \\\"@context\\\": \\\"http://schema.org/extensions\\\",\\n    \\\"themeColor\\\": \\\"0076D7\\\",\\n    \\\"summary\\\": \\\"API Subscription Approval Requested\\\",\\n    \\\"sections\\\": [{\\n        \\\"activityTitle\\\": \\\"API Subscription Approval Requested\\\",\\n        \\\"activitySubtitle\\\": \\\"Please review and approve or reject the request\\\",\\n        \\\"markdown\\\": true,\\n        \\\"facts\\\": [{\\n            \\\"name\\\": \\\"Catalog Item\\\",\\n            // \\\"value\\\": data.request.body.payload.consumerInstance.name\\n          \\t\\\"value\\\": \\\"[\\\"+catalogItemName+\\\"](\\\"+catalogItemUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Subscription\\\",\\n            \\\"value\\\": \\\"[\\\"+subscriptionName+\\\"](\\\"+subscriptionUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Name\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorName+\\\"](\\\"+requesorUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Email\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorEmail+\\\"](\\\"+requestorEmailUrl+\\\")\\\"\\n        }],\\n    }],\\n    \\\"potentialAction\\\": [{\\n        \\\"@type\\\": \\\"ActionCard\\\",\\n        \\\"name\\\": \\\"Comment\\\",\\n        \\\"inputs\\\": [{\\n            \\\"@type\\\": \\\"TextInput\\\",\\n            \\\"id\\\": \\\"comment\\\",\\n            \\\"isMultiline\\\": false,\\n            \\\"title\\\": \\\"Please enter any comments\\\"\\n        }],\\n        \\\"actions\\\": [{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Approve\\\",\\n            \\\"target\\\": approverUrl,\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Approved\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        },{\\n            \\\"@type\\\": \\\"HttpPOST\\\",\\n            \\\"name\\\": \\\"Reject\\\",\\n            \\\"target\\\": approverUrl,\\n            \\\"body\\\": \\\"{\\\\\\\"comment\\\\\\\":\\\\\\\"{{comment.value}}\\\\\\\",\\\\\\\"approvalStatus\\\\\\\":\\\\\\\"Rejected\\\\\\\", \\\\\\\"catalogItemId\\\\\\\":\\\\\\\"\\\"+catalogItemId+\\\"\\\\\\\",\\\\\\\"catalogItemName\\\\\\\":\\\\\\\"\\\"+catalogItemName+\\\"\\\\\\\",\\\\\\\"subscriptionId\\\\\\\":\\\\\\\"\\\"+subscriptionId+\\\"\\\\\\\",\\\\\\\"subscriptionName\\\\\\\":\\\\\\\"\\\"+subscriptionName+\\\"\\\\\\\",\\\\\\\"requestorName\\\\\\\":\\\\\\\"\\\"+requestorName+\\\"\\\\\\\",\\\\\\\"requestorEmail\\\\\\\":\\\\\\\"\\\"+requestorEmail+\\\"\\\\\\\"}\\\",\\n            \\\"headers\\\": [{\\n            \\t\\\"name\\\":\\\"authorization\\\",\\n            \\t\\\"value\\\":\\\"Apikey ed38c473-c759-45f3-8b1f-9568ba515a38\\\"\\n            }]\\n        }]\\n    }]\\n};\\n  \\n  return {url,body};\""
 				}
 			],
 			"outputs": {
@@ -290,7 +231,7 @@
 			"outputs": {
 				"true": {
 					"routes": [
-						"rest.1"
+						"authz.1"
 					],
 					"context": "$.equals",
 					"metaName": "True"
