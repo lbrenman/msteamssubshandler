@@ -19,7 +19,7 @@
 		},
 		"additionalProperties": false
 	},
-	"start": "rest.1",
+	"start": "javascript.2",
 	"nodes": {
 		"rest.1": {
 			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
@@ -153,7 +153,9 @@
 				{
 					"name": "code",
 					"type": "string",
-					"value": "\"console.log(data);\\n  let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  let body = {\\n    Text: \\\"Subscription requested\\\"\\n  };\\n  return {url,body};\""
+					"value": "\"console.log(data);\\n  let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  let body = {\\n    Text: \\\"Subscription requested\\\"\\n  };\\n  return {url,body};\"",
+					"metaName": "Code",
+					"metaDescription": "A JavaScript function body. Supports `await` and returning promises. `data` is the value of the Data parameter. `logger` is the API Builder logger. See the docs for more info: https://docs.axway.com/bundle/api-builder/page/docs/developer_guide/flows/flow_nodes/javascript_flow_node/index.html"
 				}
 			],
 			"outputs": {
@@ -230,6 +232,78 @@
 				}
 			},
 			"metaMethod": "POST"
+		},
+		"javascript.2": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-javascript/javascript",
+			"name": "Check valid condition to process",
+			"method": "Execute",
+			"parameters": [
+				{
+					"name": "data",
+					"type": "jsonpath",
+					"value": "$",
+					"metaName": "Data",
+					"metaDescription": "The value to apply as the `data` argument of the JavaScript code. For objects and arrays, `data` is passed by reference."
+				},
+				{
+					"name": "code",
+					"type": "string",
+					"value": "\"console.log(data.request.body.type);\\n  console.log(data.request.body.payload.subscription.currentState);\\n  \\n  return data.request.body.type==='SubscriptionUpdatedEvent' && data.request.body.payload.subscription.currentState==='REQUESTED';\"",
+					"metaName": "Code",
+					"metaDescription": "A JavaScript function body. Supports `await` and returning promises. `data` is the value of the Data parameter. `logger` is the API Builder logger. See the docs for more info: https://docs.axway.com/bundle/api-builder/page/docs/developer_guide/flows/flow_nodes/javascript_flow_node/index.html"
+				}
+			],
+			"outputs": {
+				"next": {
+					"context": "$.result",
+					"routes": [
+						"condition.1"
+					],
+					"metaName": "Next"
+				},
+				"error": {
+					"context": "$.error",
+					"routes": [],
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "Execute"
+		},
+		"condition.1": {
+			"type": "nodehandler://axway-flow/condition",
+			"name": "Equals",
+			"method": "equals",
+			"parameters": [
+				{
+					"name": "source",
+					"type": "jsonpath",
+					"value": "$.result",
+					"metaName": "Source",
+					"metaDescription": "The input to test."
+				},
+				{
+					"name": "value",
+					"type": "boolean",
+					"value": "true"
+				}
+			],
+			"outputs": {
+				"true": {
+					"routes": [
+						"rest.1"
+					],
+					"context": "$.equals",
+					"metaName": "True"
+				},
+				"false": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.equals",
+					"metaName": "False"
+				}
+			},
+			"metaMethod": "Equals"
 		}
 	}
 }
