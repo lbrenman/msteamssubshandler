@@ -35,8 +35,8 @@
 				},
 				{
 					"name": "body",
-					"type": "string",
-					"value": "\"{\\\"success\\\":\\\"true\\\"}\"",
+					"type": "object",
+					"value": "{\"success\":\"true\"}",
 					"metaName": "Body",
 					"metaDescription": "The response payload"
 				}
@@ -64,8 +64,8 @@
 				},
 				{
 					"name": "body",
-					"type": "string",
-					"value": "\"{\\\"success\\\":\\\"false\\\"}\"",
+					"type": "object",
+					"value": "{\"success\":\"false\"}",
 					"metaName": "Body",
 					"metaDescription": "The response payload"
 				}
@@ -135,13 +135,15 @@
 				{
 					"name": "body",
 					"type": "jsonpath",
-					"value": "$.result"
+					"value": "$.result",
+					"metaName": "body",
+					"metaDescription": "The request body.  Please refer to the info icon for schema."
 				}
 			],
 			"outputs": {
 				"201": {
 					"routes": [
-						"http.1"
+						"javascript.2"
 					],
 					"context": "$.response",
 					"metaName": "201"
@@ -204,6 +206,99 @@
 				}
 			],
 			"metaMethod": "POST_catalogItemSubscriptions"
+		},
+		"javascript.2": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-javascript/javascript",
+			"name": "Prepare send to MS Teams",
+			"method": "Execute",
+			"parameters": [
+				{
+					"name": "data",
+					"type": "jsonpath",
+					"value": "$",
+					"metaName": "Data",
+					"metaDescription": "The value to apply as the `data` argument of the JavaScript code. For objects and arrays, `data` is passed by reference."
+				},
+				{
+					"name": "code",
+					"type": "string",
+					"value": "\"let url = data.env.MS_TEAMS_WEBHOOK_URL;\\n  \\n  let catalogItemName = data.request.body.catalogItemName;\\n  let catalogItemId = data.request.body.catalogItemId;\\n  let catalogItemUrl = data.env.API_CENTRAL_URL+\\\"/catalog/explore\\\"+\\\"/\\\"+catalogItemId;\\n  \\n  let subscriptionName = data.request.body.subscriptionName;\\n  let subscriptionId = data.request.body.subscriptionId;\\n  let subscriptionUrl = data.env.API_CENTRAL_URL+\\\"/catalog\\\"+\\\"/\\\"+catalogItemId+\\\"/subscriptions\\\"+\\\"/\\\"+subscriptionId;\\n  \\n  let requestorName = data.request.body.requestorName;\\n  // let requestorUrl = \\\"https://platform.axway.com/user/\\\"+data.request.body.payload.subscription.metadata.createUserId;\\n  let requestorUrl = \\\"https://platform.axway.com/user/\\\";\\n  \\n  let requestorEmail = data.request.body.requestorEmail;\\n  let requestorEmailUrl = \\\"mailto:\\\"+data.request.body.requestorEmail;\\n  \\n  // console.log(approverUrl);\\n  \\n  let body = {\\n    \\\"@type\\\": \\\"MessageCard\\\",\\n    \\\"@context\\\": \\\"http://schema.org/extensions\\\",\\n    \\\"themeColor\\\": \\\"0076D7\\\",\\n    \\\"summary\\\": \\\"API Subscription Approval Requested Processed\\\",\\n    \\\"sections\\\": [{\\n        \\\"activityTitle\\\": \\\"API Subscription Approval Requested Processed\\\",\\n        \\\"activitySubtitle\\\": \\\"The request below has been processed as \\\"+data.request.body.approvalStatus,\\n        \\\"markdown\\\": true,\\n        \\\"facts\\\": [{\\n            \\\"name\\\": \\\"Catalog Item\\\",\\n            // \\\"value\\\": data.request.body.payload.consumerInstance.name\\n          \\t\\\"value\\\": \\\"[\\\"+catalogItemName+\\\"](\\\"+catalogItemUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Subscription\\\",\\n            \\\"value\\\": \\\"[\\\"+subscriptionName+\\\"](\\\"+subscriptionUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Name\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorName+\\\"](\\\"+requestorUrl+\\\")\\\"\\n        },{\\n            \\\"name\\\": \\\"Requestor Email\\\",\\n            \\\"value\\\": \\\"[\\\"+requestorEmail+\\\"](\\\"+requestorEmailUrl+\\\")\\\"\\n        }],\\n    }]\\n};\\n  \\n  return {url,body};\""
+				}
+			],
+			"outputs": {
+				"next": {
+					"context": "$.result",
+					"routes": [
+						"rest.1"
+					],
+					"metaName": "Next"
+				},
+				"error": {
+					"context": "$.error",
+					"routes": [],
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "Execute"
+		},
+		"rest.1": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-restclient/rest",
+			"name": "Send to MS Teams",
+			"method": "post",
+			"parameters": [
+				{
+					"name": "body",
+					"type": "jsonpath",
+					"value": "$.result.body",
+					"metaName": "Body",
+					"metaDescription": "The content to send."
+				},
+				{
+					"name": "url",
+					"type": "jsonpath",
+					"value": "$.result.url",
+					"metaName": "URL",
+					"metaDescription": "The target URL."
+				}
+			],
+			"outputs": {
+				"2xx": {
+					"routes": [
+						"http.1"
+					],
+					"context": "$.response",
+					"metaName": "2XX"
+				},
+				"3xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "3XX"
+				},
+				"4xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "4XX"
+				},
+				"5xx": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "5XX"
+				},
+				"error": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.error",
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "POST"
 		}
 	}
 }
