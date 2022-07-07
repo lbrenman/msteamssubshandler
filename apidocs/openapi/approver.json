@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.0",
+  "x-stoplight": {
+    "id": "rg6g0zwktl452"
+  },
+  "info": {
+    "title": "approver",
+    "version": "1.0",
+    "description": "API to approve Amplify API Subscriptions",
+    "contact": {
+      "name": "Leor Brenman",
+      "email": "lbrenman99@hotmail.com",
+      "url": "https://www.leorbrenman.com"
+    },
+    "license": {
+      "name": "N/A",
+      "url": "https://www.leorbrenman.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api",
+      "description": "Local"
+    },
+    {
+      "url": "https://80bb-2601-18a-8300-e3c0-c9e9-c92a-37aa-f943.ngrok.io/api",
+      "description": "ngrok"
+    }
+  ],
+  "paths": {
+    "/approver": {
+      "post": {
+        "summary": "",
+        "operationId": "post-approver",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "approver"
+        ],
+        "description": "approver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproverBody"
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "comment": "Your request is approved",
+                    "approvalStatus": "Approved",
+                    "catalogItemId": "8a2e820781617ccf01818d0f0ce32fe0",
+                    "catalogItemName": "comprehend",
+                    "subscriptionId": "8a2e941581617b980181d58ff6ac58e7",
+                    "subscriptionName": "Mobile App",
+                    "requestorName": "Leor Brenman",
+                    "requestorEmail": "leor.brenman@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApproverBody": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string"
+          },
+          "approvalStatus": {
+            "type": "string"
+          },
+          "catalogItemId": {
+            "type": "string"
+          },
+          "catalogItemName": {
+            "type": "string"
+          },
+          "subscriptionId": {
+            "type": "string"
+          },
+          "subscriptionName": {
+            "type": "string"
+          },
+          "requestorName": {
+            "type": "string"
+          },
+          "requestorEmail": {
+            "type": "string"
+          }
+        },
+        "x-examples": {
+          "example-1": {
+            "comment": "Your request is approved",
+            "approvalStatus": "Approved",
+            "catalogItemId": "8a2e820781617ccf01818d0f0ce32fe0",
+            "catalogItemName": "comprehend",
+            "subscriptionId": "8a2e941581617b980181d58ff6ac58e7",
+            "subscriptionName": "Mobile App",
+            "requestorName": "Leor Brenman",
+            "requestorEmail": "leor.brenman@gmail.com"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "name": "apiKey",
+        "type": "apiKey",
+        "in": "header"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "approver",
+      "description": "approver"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

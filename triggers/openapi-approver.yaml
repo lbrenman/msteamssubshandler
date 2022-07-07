@@ -1,0 +1,12 @@
+triggers:
+  openapi-approver-1:
+    name: post-approver
+    parameters:
+      method: post-approver
+    enabled: true
+    invoke:
+      flow: post-approver
+      parameters:
+        request: $.request
+        config: $.config
+        env: $.env
