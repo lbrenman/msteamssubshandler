@@ -3,6 +3,7 @@
 # This line defines which node.js Docker image to leverage
 # Available versions are described at https://hub.docker.com/_/node/
 FROM node:16-alpine
+FROM --platform=linux/amd64 node:16-alpine
 
 # Sets the default working directory to /app which is where we copy the service files to.
 WORKDIR /app
