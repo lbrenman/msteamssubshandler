@@ -1,6 +1,8 @@
 # API Builder Amplify Subscription Handler using MS Teams
 
-An API Builder project that handles Amplify Central Unified Catalog [**API subscription**](https://docs.axway.com/bundle/amplify-central/page/docs/manage_unified_catalog/manage_subscriptions/index.html) approval requests as a [**custom workflow**](https://docs.axway.com/bundle/amplify-central/page/docs/connect_manage_environ/connected_agent_common_reference/manage_subscription_workflow/index.html). The project exposes two API's:
+An API Builder project that handles Amplify Central Unified Catalog [**API subscription**](https://docs.axway.com/bundle/amplify-central/page/docs/manage_unified_catalog/manage_subscriptions/index.html) approval requests as a [**custom workflow**](https://docs.axway.com/bundle/amplify-central/page/docs/connect_manage_environ/connected_agent_common_reference/manage_subscription_workflow/index.html) using [**MS Teams**](https://www.microsoft.com/en-us/microsoft-teams/group-chat-software).
+
+The project exposes two API's:
 
 * `POST /api/amplifycentralwebhookhandler` - the webhook url that Amplify will call when a subscription approval request is made. This API will send an approval form card to a MS Teams channel
 * `POST /api/approver` - API that will be triggered when the approve/reject buttons are pressed in the MS Teams approval form
