@@ -12,7 +12,7 @@ Triggered by Amplify Subscription Webhook
 
 ```
 curl --location --request POST 'http://localhost:8080/api/amplifycentralwebhookhandler' \
---header 'apiKey: gK6/xGFbqFul5oQcI16waevmPrnt1CHD' \
+--header 'apiKey: <API KEY>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": "382a0c4b-312a-4dce-bb4f-0d7d8caa1da7",
